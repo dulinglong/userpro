@@ -3,7 +3,9 @@ package com.zhizuobiao.userpro.controller;
 
 import com.zhizuobiao.userpro.entity.Result;
 import com.zhizuobiao.userpro.entity.User;
+import com.zhizuobiao.userpro.enums.Status;
 import com.zhizuobiao.userpro.service.UserService;
+import com.zhizuobiao.userpro.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -33,9 +35,12 @@ public class UserController {
 
     @GetMapping("/add")
 
-    public Result<User> saveOne(@Validated User user,BindingResult bindingResult){
+    public Result<User> saveOne(@Validated User user,BindingResult bindingResult) throws Exception{
 
-       return userService.save(user,bindingResult);
+        if(bindingResult.hasErrors()){
+            return ResultUtil.error(Status.SPRING_VALIDATION.getCode(),bindingResult.getFieldError().getDefaultMessage());
+        }
+       return userService.save(user);
     }
 
 
